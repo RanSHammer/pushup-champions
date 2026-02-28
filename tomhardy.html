@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔥 Tom Hardy Workout</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --neon-pink: #ff2d95;
+      --neon-cyan: #00f5ff;
+      --neon-yellow: #ffe600;
+      --neon-green: #39ff14;
+      --neon-orange: #ff6b35;
+      --bg-dark: #1a1a2e;
+      --bg-card: #16213e;
+      --text: #ffffff;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px 0;
+    }
+    
+    .header h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--neon-orange);
+      text-shadow: 0 0 20px var(--neon-orange);
+      margin-bottom: 8px;
+    }
+    
+    .header .subtitle {
+      font-size: 12px;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan);
+    }
+    
+    /* Round Indicator */
+    .round-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .round-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 3px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      color: #666;
+      transition: all 0.3s;
+    }
+    
+    .round-dot.active {
+      border-color: var(--neon-orange);
+      color: var(--neon-orange);
+      box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+    }
+    
+    .round-dot.complete {
+      border-color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.2);
+      color: var(--neon-green);
+    }
+    
+    /* Exercise List */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .exercise-item {
+      background: var(--bg-card);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    
+    .exercise-item:hover {
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .exercise-item:active {
+      transform: scale(0.98);
+    }
+    
+    .exercise-item.done {
+      border-color: var(--neon-green);
+      background: rgba(57, 255, 20, 0.1);
+    }
+    
+    .exercise-item.done .exercise-check {
+      background: var(--neon-green);
+      border-color: var(--neon-green);
+    }
+    
+    .exercise-item.done .exercise-check::after {
+      content: '✓';
+      color: var(--bg-dark);
+      font-weight: bold;
+    }
+    
+    .exercise-check {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    
+    .exercise-info {
+      flex: 1;
+    }
+    
+    .exercise-name {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    
+    .exercise-reps {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      color: var(--neon-yellow);
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      padding: 18px;
+      border-radius: 12px;
+      border: 2px solid;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Press Start 2P', monospace;
+    }
+    
+    .action-btn.reset {
+      border-color: #666;
+      color: #666;
+    }
+    
+    .action-btn.reset:hover {
+      border-color: var(--neon-pink);
+      color: var(--neon-pink);
+    }
+    
+    .action-btn.next {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      background: rgba(0, 245, 255, 0.1);
+    }
+    
+    .action-btn.next:hover {
+      background: rgba(0, 245, 255, 0.2);
+    }
+    
+    .action-btn.next:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    /* Complete Screen */
+    .complete-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    
+    .complete-screen.show {
+      display: block;
+    }
+    
+    .complete-screen .emoji {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .complete-screen h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 16px;
+      color: var(--neon-green);
+      text-shadow: 0 0 20px var(--neon-green);
+      margin-bottom: 16px;
+    }
+    
+    .complete-screen p {
+      color: #888;
+      margin-bottom: 32px;
+    }
+    
+    .complete-screen .action-btn {
+      max-width: 200px;
+      margin: 0 auto;
+    }
+    
+    /* Workout Content (hide when complete) */
+    .workout-content.hidden {
+      display: none;
+    }
+    
+    /* Back link */
+    .back-link {
+      text-align: center;
+      margin-top: 32px;
+    }
+    
+    .back-link a {
+      color: #666;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    
+    .back-link a:hover {
+      color: var(--neon-cyan);
+    }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      border: 2px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1001;
+      box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔥 TOM HARDY</h1>
+      <div class="subtitle">4 Rounds • No Rest</div>
+    </div>
+    
+    <!-- Round Indicator -->
+    <div class="round-indicator">
+      <div class="round-dot active" data-round="1">1</div>
+      <div class="round-dot" data-round="2">2</div>
+      <div class="round-dot" data-round="3">3</div>
+      <div class="round-dot" data-round="4">4</div>
+    </div>
+    
+    <!-- Workout Content -->
+    <div class="workout-content" id="workoutContent">
+      <div class="exercise-list" id="exerciseList">
+        <!-- Generated by JS -->
+      </div>
+      
+      <div class="actions">
+        <button class="action-btn reset" onclick="resetRound()">RESET</button>
+        <button class="action-btn next" id="nextBtn" onclick="nextRound()" disabled>NEXT →</button>
+      </div>
+    </div>
+    
+    <!-- Complete Screen -->
+    <div class="complete-screen" id="completeScreen">
+      <div class="emoji">🏆</div>
+      <h2>WORKOUT COMPLETE!</h2>
+      <p>4 rounds done. Tom Hardy would be proud.</p>
+      <button class="action-btn next" onclick="resetAll()">GO AGAIN</button>
+    </div>
+    
+    <div class="back-link">
+      <a href="index.html">← Back to Push-Up Champions</a>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast">Round complete! 💪</div>
+  
+  <script>
+    const exercises = [
+      { name: 'Push-ups', reps: '25x' },
+      { name: 'Squat Pulses', reps: '20x' },
+      { name: 'Diamond Push-ups', reps: '15x' },
+      { name: 'Mountain Climbers', reps: '30x' },
+      { name: 'Lunges (each leg)', reps: '20x each' },
+      { name: 'Plank', reps: '45 sec' }
+    ];
+    
+    let currentRound = 1;
+    let completedExercises = new Set();
+    
+    function renderExercises() {
+      const list = document.getElementById('exerciseList');
+      list.innerHTML = exercises.map((ex, idx) => `
+        <div class="exercise-item ${completedExercises.has(idx) ? 'done' : ''}" onclick="toggleExercise(${idx})">
+          <div class="exercise-check"></div>
+          <div class="exercise-info">
+            <div class="exercise-name">${ex.name}</div>
+            <div class="exercise-reps">${ex.reps}</div>
+          </div>
+        </div>
+      `).join('');
+      
+      updateNextButton();
+    }
+    
+    function toggleExercise(idx) {
+      if (completedExercises.has(idx)) {
+        completedExercises.delete(idx);
+      } else {
+        completedExercises.add(idx);
+      }
+      renderExercises();
+    }
+    
+    function updateNextButton() {
+      const btn = document.getElementById('nextBtn');
+      const allDone = completedExercises.size === exercises.length;
+      btn.disabled = !allDone;
+      
+      if (currentRound === 4 && allDone) {
+        btn.textContent = 'FINISH 🏆';
+      } else if (allDone) {
+        btn.textContent = 'NEXT →';
+      }
+    }
+    
+    function updateRoundIndicator() {
+      document.querySelectorAll('.round-dot').forEach(dot => {
+        const round = parseInt(dot.dataset.round);
+        dot.classList.remove('active', 'complete');
+        if (round < currentRound) {
+          dot.classList.add('complete');
+        } else if (round === currentRound) {
+          dot.classList.add('active');
+        }
+      });
+    }
+    
+    function nextRound() {
+      if (completedExercises.size !== exercises.length) return;
+      
+      if (currentRound === 4) {
+        // Workout complete!
+        document.getElementById('workoutContent').classList.add('hidden');
+        document.getElementById('completeScreen').classList.add('show');
+        document.querySelectorAll('.round-dot').forEach(dot => dot.classList.add('complete'));
+        return;
+      }
+      
+      currentRound++;
+      completedExercises.clear();
+      updateRoundIndicator();
+      renderExercises();
+      showToast(`Round ${currentRound} - Let's go! 💪`);
+    }
+    
+    function resetRound() {
+      completedExercises.clear();
+      renderExercises();
+    }
+    
+    function resetAll() {
+      currentRound = 1;
+      completedExercises.clear();
+      document.getElementById('workoutContent').classList.remove('hidden');
+      document.getElementById('completeScreen').classList.remove('show');
+      updateRoundIndicator();
+      renderExercises();
+    }
+    
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+    
+    // Init
+    renderExercises();
+    updateRoundIndicator();
+  </script>
+</body>
+</html>
