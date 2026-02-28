@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔨 Hammer Hour of Power</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #f97316;
+      --orange-dim: rgba(249, 115, 22, 0.12);
+      --orange-glow: rgba(249, 115, 22, 0.4);
+      --green: #22c55e;
+      --green-dim: rgba(34, 197, 94, 0.12);
+      --cyan: #38bdf8;
+      --yellow: #facc15;
+      --red: #ef4444;
+      --bg: #09090b;
+      --card: #18181b;
+      --card-border: #27272a;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .container { max-width: 480px; margin: 0 auto; }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px 0 12px;
+    }
+
+    .header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: var(--orange);
+      letter-spacing: 3px;
+      margin-bottom: 6px;
+    }
+
+    .header .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .progress-bar-container {
+      background: var(--card);
+      border-radius: 6px;
+      height: 6px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+      border-radius: 6px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .current-exercise {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .current-exercise .exercise-number {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .current-exercise .exercise-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .current-exercise .exercise-detail {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--orange);
+      margin-bottom: 4px;
+    }
+
+    .current-exercise .set-info {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .set-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .set-dot {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 2px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dim);
+      transition: all 0.3s;
+    }
+
+    .set-dot.active {
+      border-color: var(--orange);
+      color: var(--orange);
+      box-shadow: 0 0 12px var(--orange-glow);
+    }
+
+    .set-dot.complete {
+      border-color: var(--green);
+      background: var(--green-dim);
+      color: var(--green);
+    }
+
+    .done-btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      border-radius: 14px;
+      border: none;
+      background: var(--orange);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .done-btn:hover { background: #ea580c; }
+    .done-btn:active { transform: scale(0.97); }
+    .done-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .timer-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(9, 9, 11, 0.96);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .timer-overlay.show { display: flex; }
+
+    .timer-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 4px;
+      color: var(--cyan);
+      margin-bottom: 24px;
+    }
+
+    .timer-countdown {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 80px;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .timer-next {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .timer-next .highlight {
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    .timer-skip {
+      padding: 12px 32px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .timer-skip:hover {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .timer-ring {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timer-ring svg { transform: rotate(-90deg); }
+
+    .timer-ring-bg {
+      fill: none;
+      stroke: var(--card-border);
+      stroke-width: 6;
+    }
+
+    .timer-ring-progress {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .timer-ring .timer-countdown {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+    }
+
+    .upcoming-list { margin-top: 24px; }
+
+    .upcoming-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .upcoming-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text-dim);
+      transition: all 0.3s;
+    }
+
+    .upcoming-item.done-ex {
+      color: var(--green);
+      text-decoration: line-through;
+      opacity: 0.4;
+    }
+
+    .upcoming-item.current-ex {
+      background: var(--orange-dim);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: var(--text);
+    }
+
+    .upcoming-item .up-num {
+      font-size: 11px;
+      font-weight: 700;
+      width: 24px;
+      text-align: center;
+    }
+
+    .upcoming-item .up-name { flex: 1; font-weight: 500; }
+
+    .upcoming-item .up-sets {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .complete-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .complete-screen.show { display: block; }
+
+    .complete-screen .emoji {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .complete-screen h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--green);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .complete-screen p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
+
+    .complete-screen .done-btn {
+      max-width: 220px;
+      margin: 0 auto;
+      background: var(--green);
+    }
+
+    .complete-screen .done-btn:hover { background: #16a34a; }
+
+    .workout-content.hidden { display: none; }
+
+    @keyframes goFlash {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+
+    .go-flash {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: var(--orange);
+      z-index: 1001;
+      pointer-events: none;
+      animation: goFlash 0.8s ease-out forwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔨 HAMMER HOUR OF POWER</h1>
+      <div class="subtitle">Shoulders · Arms · Core — DB Only</div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="workout-content" id="workoutContent">
+      <div class="current-exercise" id="currentExercise">
+        <div class="exercise-number" id="exNumber"></div>
+        <div class="exercise-name" id="exName"></div>
+        <div class="exercise-detail" id="exReps"></div>
+        <div class="set-info" id="setInfo"></div>
+      </div>
+
+      <div class="set-buttons" id="setButtons"></div>
+      <button class="done-btn" id="doneBtn" onclick="completeSet()">SET DONE ✓</button>
+
+      <div class="upcoming-list" id="upcomingList">
+        <div class="upcoming-label">All Exercises</div>
+        <div id="upcomingItems"></div>
+      </div>
+    </div>
+
+    <div class="complete-screen" id="completeScreen">
+      <div class="emoji">🏆</div>
+      <h2>WORKOUT COMPLETE!</h2>
+      <p>Shoulders, Arms & Core crushed. 💪</p>
+      <button class="done-btn" onclick="resetAll()">GO AGAIN</button>
+    </div>
+  </div>
+
+  <div class="timer-overlay" id="timerOverlay">
+    <div class="timer-label" id="timerLabel">REST</div>
+    <div class="timer-ring">
+      <svg width="200" height="200">
+        <circle class="timer-ring-bg" cx="100" cy="100" r="88"></circle>
+        <circle class="timer-ring-progress" id="timerRingProgress" cx="100" cy="100" r="88"
+          stroke-dasharray="553" stroke-dashoffset="0"></circle>
+      </svg>
+      <div class="timer-countdown" id="timerCountdown">30</div>
+    </div>
+    <div class="timer-next" id="timerNext"></div>
+    <button class="timer-skip" onclick="skipTimer()">SKIP →</button>
+  </div>
+
+  <script>
+    const exercises = [
+      { name: 'DB Overhead Press', sets: 3, reps: '6–10 reps' },
+      { name: 'DB Lateral Raise', sets: 3, reps: '12–20 reps' },
+      { name: 'DB Rear Delt Fly', sets: 3, reps: '12–20 reps' },
+      { name: 'DB Shrug', sets: 3, reps: '10–15 reps' },
+      { name: 'DB Hammer Curl', sets: 3, reps: '8–12 reps' },
+      { name: 'DB Curl', sets: 3, reps: '10–15 reps' },
+      { name: 'DB Skull Crush', sets: 3, reps: '10–15 reps' },
+      { name: 'DB Tricep Kickback', sets: 2, reps: '12–20 reps' },
+      { name: 'Plank', sets: 3, reps: '45–75 sec' },
+      { name: 'DB Russian Twist', sets: 3, reps: '16–24 total' }
+    ];
+
+    const REST_BETWEEN_SETS = 30;
+    const REST_BETWEEN_EXERCISES = 60;
+
+    let currentExIndex = 0;
+    let currentSet = 0;
+    let timerInterval = null;
+
+    function getTotalSets() {
+      return exercises.reduce((sum, ex) => sum + ex.sets, 0);
+    }
+
+    function getCompletedSets() {
+      let count = 0;
+      for (let i = 0; i < currentExIndex; i++) count += exercises[i].sets;
+      count += currentSet;
+      return count;
+    }
+
+    function updateProgress() {
+      const pct = (getCompletedSets() / getTotalSets()) * 100;
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    function render() {
+      const ex = exercises[currentExIndex];
+      document.getElementById('exNumber').textContent = `EXERCISE ${currentExIndex + 1} OF ${exercises.length}`;
+      document.getElementById('exName').textContent = ex.name;
+      document.getElementById('exReps').textContent = ex.reps;
+      document.getElementById('setInfo').textContent = `Set ${currentSet + 1} of ${ex.sets}`;
+
+      const setBtns = document.getElementById('setButtons');
+      setBtns.innerHTML = '';
+      for (let i = 0; i < ex.sets; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'set-dot';
+        if (i < currentSet) dot.classList.add('complete');
+        if (i === currentSet) dot.classList.add('active');
+        dot.textContent = i + 1;
+        setBtns.appendChild(dot);
+      }
+
+      const items = document.getElementById('upcomingItems');
+      items.innerHTML = exercises.map((e, idx) => {
+        let cls = 'upcoming-item';
+        if (idx < currentExIndex) cls += ' done-ex';
+        if (idx === currentExIndex) cls += ' current-ex';
+        return `<div class="${cls}">
+          <span class="up-num">${idx < currentExIndex ? '✓' : idx + 1}</span>
+          <span class="up-name">${e.name}</span>
+          <span class="up-sets">${e.sets}×</span>
+        </div>`;
+      }).join('');
+
+      updateProgress();
+
+      const btn = document.getElementById('doneBtn');
+      if (currentSet === ex.sets - 1 && currentExIndex === exercises.length - 1) {
+        btn.textContent = 'FINISH WORKOUT 🏆';
+      } else if (currentSet === ex.sets - 1) {
+        btn.textContent = 'LAST SET — DONE ✓';
+      } else {
+        btn.textContent = 'SET DONE ✓';
+      }
+    }
+
+    function completeSet() {
+      const ex = exercises[currentExIndex];
+      currentSet++;
+
+      if (currentSet >= ex.sets) {
+        if (currentExIndex >= exercises.length - 1) {
+          updateProgress();
+          document.getElementById('workoutContent').classList.add('hidden');
+          document.getElementById('completeScreen').classList.add('show');
+          document.getElementById('progressBar').style.width = '100%';
+          return;
+        }
+        currentExIndex++;
+        currentSet = 0;
+        startTimer(REST_BETWEEN_EXERCISES, `Next: ${exercises[currentExIndex].name}`, true);
+      } else {
+        startTimer(REST_BETWEEN_SETS, `${ex.name} — Set ${currentSet + 1}`, false);
+      }
+      render();
+    }
+
+    function startTimer(seconds, nextLabel, isNewExercise) {
+      const overlay = document.getElementById('timerOverlay');
+      const countdown = document.getElementById('timerCountdown');
+      const label = document.getElementById('timerLabel');
+      const next = document.getElementById('timerNext');
+      const ring = document.getElementById('timerRingProgress');
+      const circumference = 553;
+
+      label.textContent = isNewExercise ? 'NEW EXERCISE' : 'REST';
+      label.style.color = isNewExercise ? 'var(--orange)' : 'var(--cyan)';
+      ring.style.stroke = isNewExercise ? 'var(--orange)' : 'var(--cyan)';
+      next.innerHTML = `Up next: <span class="highlight">${nextLabel}</span>`;
+
+      let remaining = seconds;
+      countdown.textContent = remaining;
+      countdown.style.color = 'var(--text)';
+      ring.style.strokeDashoffset = '0';
+      overlay.classList.add('show');
+
+      function beep(freq, dur) {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.value = freq;
+          gain.gain.value = 0.3;
+          osc.start();
+          setTimeout(() => { osc.stop(); ctx.close(); }, dur);
+        } catch(e) {}
+      }
+
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        remaining--;
+        countdown.textContent = remaining;
+        const offset = circumference * (1 - remaining / seconds);
+        ring.style.strokeDashoffset = offset;
+
+        if (remaining <= 3 && remaining > 0) {
+          beep(800, 150);
+          countdown.style.color = 'var(--red)';
+        }
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          overlay.classList.remove('show');
+          countdown.style.color = 'var(--text)';
+          beep(1200, 300);
+          showGoFlash();
+        }
+      }, 1000);
+    }
+
+    function skipTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+      document.getElementById('timerOverlay').classList.remove('show');
+      document.getElementById('timerCountdown').style.color = 'var(--text)';
+      showGoFlash();
+    }
+
+    function showGoFlash() {
+      const flash = document.createElement('div');
+      flash.className = 'go-flash';
+      flash.textContent = 'GO!';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 800);
+    }
+
+    function resetAll() {
+      currentExIndex = 0;
+      currentSet = 0;
+      document.getElementById('workoutContent').classList.remove('hidden');
+      document.getElementById('completeScreen').classList.remove('show');
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
