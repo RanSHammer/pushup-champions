@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🔥 SESSION OF AGGRESSION</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --fire-red: #ff1744;
+      --fire-orange: #ff6d00;
+      --fire-yellow: #ffd600;
+      --laser-blue: #00e5ff;
+      --laser-purple: #d500f9;
+      --plasma-green: #76ff03;
+      --bg-dark: #0a0a0a;
+      --bg-card: #141414;
+      --text: #ffffff;
+    }
+    
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 100px;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at 20% 50%, rgba(255,23,68,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(213,0,249,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(255,109,0,0.1) 0%, transparent 50%);
+      z-index: 0;
+      animation: bgPulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    /* Laser lines */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        repeating-linear-gradient(0deg, transparent, transparent 98px, rgba(255,23,68,0.03) 98px, rgba(255,23,68,0.03) 100px),
+        repeating-linear-gradient(90deg, transparent, transparent 98px, rgba(0,229,255,0.03) 98px, rgba(0,229,255,0.03) 100px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 20px 0;
+    }
+    
+    .header h1 {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--fire-red), var(--fire-orange), var(--fire-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: none;
+      filter: drop-shadow(0 0 20px rgba(255,23,68,0.5));
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    
+    .header .subtitle {
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: var(--laser-blue);
+      text-shadow: 0 0 15px var(--laser-blue), 0 0 30px rgba(0,229,255,0.3);
+      text-transform: uppercase;
+    }
+
+    .header .fire-emoji {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 8px;
+      animation: fireFlicker 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes fireFlicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.1) rotate(2deg); }
+    }
+    
+    /* Round Indicator */
+    .round-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    
+    .round-dot {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 3px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #444;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+    
+    .round-dot.active {
+      border-color: var(--fire-red);
+      color: var(--fire-red);
+      box-shadow: 0 0 20px rgba(255,23,68,0.5), 0 0 40px rgba(255,23,68,0.2), inset 0 0 15px rgba(255,23,68,0.1);
+      animation: roundPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes roundPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,23,68,0.5), 0 0 40px rgba(255,23,68,0.2); }
+      50% { box-shadow: 0 0 30px rgba(255,23,68,0.7), 0 0 60px rgba(255,23,68,0.3); }
+    }
+    
+    .round-dot.complete {
+      border-color: var(--plasma-green);
+      background: rgba(118, 255, 3, 0.15);
+      color: var(--plasma-green);
+      box-shadow: 0 0 15px rgba(118,255,3,0.4);
+    }
+    
+    /* Exercise List */
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    
+    .exercise-item {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #1a1a1a 100%);
+      border: 2px solid #222;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .exercise-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,23,68,0.05), transparent);
+      transition: left 0.5s;
+    }
+
+    .exercise-item:hover::before {
+      left: 100%;
+    }
+    
+    .exercise-item:active {
+      transform: scale(0.97);
+    }
+    
+    .exercise-item.done {
+      border-color: var(--plasma-green);
+      background: linear-gradient(135deg, rgba(118,255,3,0.08) 0%, rgba(118,255,3,0.03) 100%);
+    }
+    
+    .exercise-item.done .exercise-check {
+      background: var(--plasma-green);
+      border-color: var(--plasma-green);
+      box-shadow: 0 0 15px rgba(118,255,3,0.5);
+    }
+    
+    .exercise-item.done .exercise-check::after {
+      content: '✓';
+      color: var(--bg-dark);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .exercise-item.done .exercise-name {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    
+    .exercise-check {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #444;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    
+    .exercise-info {
+      flex: 1;
+    }
+    
+    .exercise-name {
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      transition: all 0.3s;
+    }
+    
+    .exercise-reps {
+      font-size: 11px;
+      font-weight: 400;
+      background: linear-gradient(90deg, var(--fire-orange), var(--fire-yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .exercise-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      padding: 18px;
+      border-radius: 14px;
+      border: 2px solid;
+      background: none;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    
+    .action-btn.reset {
+      border-color: #333;
+      color: #555;
+    }
+    
+    .action-btn.reset:hover {
+      border-color: var(--fire-red);
+      color: var(--fire-red);
+      box-shadow: 0 0 20px rgba(255,23,68,0.2);
+    }
+    
+    .action-btn.next {
+      border-color: var(--laser-blue);
+      color: var(--laser-blue);
+      background: rgba(0, 229, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn.next::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .action-btn.next:hover {
+      background: rgba(0, 229, 255, 0.15);
+      box-shadow: 0 0 30px rgba(0,229,255,0.3), 0 0 60px rgba(0,229,255,0.1);
+    }
+
+    .action-btn.next:hover::before {
+      opacity: 1;
+    }
+    
+    .action-btn.next:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    /* Complete Screen */
+    .complete-screen {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    
+    .complete-screen.show {
+      display: block;
+    }
+    
+    .complete-screen .emoji {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: victoryPulse 0.8s ease-in-out infinite alternate;
+    }
+    
+    @keyframes victoryPulse {
+      0% { transform: scale(1) rotate(-5deg); filter: drop-shadow(0 0 20px rgba(255,23,68,0.5)); }
+      100% { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 40px rgba(255,109,0,0.8)); }
+    }
+    
+    .complete-screen h2 {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, var(--fire-red), var(--fire-orange), var(--fire-yellow), var(--plasma-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    
+    .complete-screen p {
+      color: #666;
+      font-size: 11px;
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+    }
+
+    .complete-screen .stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-box {
+      text-align: center;
+    }
+
+    .stat-box .value {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--fire-orange);
+      text-shadow: 0 0 20px rgba(255,109,0,0.5);
+    }
+
+    .stat-box .label {
+      font-size: 8px;
+      color: #555;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+    
+    .complete-screen .action-btn {
+      max-width: 240px;
+      margin: 0 auto;
+    }
+    
+    /* Workout Content */
+    .workout-content.hidden {
+      display: none;
+    }
+    
+    /* Back link */
+    .back-link {
+      text-align: center;
+      margin-top: 32px;
+    }
+    
+    .back-link a {
+      color: #333;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 2px;
+    }
+    
+    .back-link a:hover {
+      color: var(--laser-blue);
+    }
+    
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-card);
+      border: 2px solid var(--fire-red);
+      color: var(--fire-orange);
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1001;
+      box-shadow: 0 0 30px rgba(255,23,68,0.4), 0 0 60px rgba(255,23,68,0.1);
+    }
+    
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Particle canvas */
+    #particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  
+  <div class="container">
+    <div class="header">
+      <span class="fire-emoji">🔥</span>
+      <h1>SESSION OF AGGRESSION</h1>
+      <div class="subtitle">4 Rounds • No Mercy</div>
+    </div>
+    
+    <div class="round-indicator">
+      <div class="round-dot active" data-round="1">1</div>
+      <div class="round-dot" data-round="2">2</div>
+      <div class="round-dot" data-round="3">3</div>
+      <div class="round-dot" data-round="4">4</div>
+    </div>
+    
+    <div class="workout-content" id="workoutContent">
+      <div class="exercise-list" id="exerciseList"></div>
+      
+      <div class="actions">
+        <button class="action-btn reset" onclick="resetRound()">RESET</button>
+        <button class="action-btn next" id="nextBtn" onclick="nextRound()" disabled>NEXT →</button>
+      </div>
+    </div>
+    
+    <div class="complete-screen" id="completeScreen">
+      <div class="emoji">⚡</div>
+      <h2>AGGRESSION COMPLETE</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="value">4</div>
+          <div class="label">ROUNDS</div>
+        </div>
+        <div class="stat-box">
+          <div class="value">288</div>
+          <div class="label">TOTAL REPS</div>
+        </div>
+        <div class="stat-box">
+          <div class="value" id="timeElapsed">0:00</div>
+          <div class="label">TIME</div>
+        </div>
+      </div>
+      <p>PURE DESTRUCTION 💀</p>
+      <button class="action-btn next" onclick="resetAll()">GO AGAIN</button>
+    </div>
+    
+    <div class="back-link">
+      <a href="index.html">← BACK TO BASE</a>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    const exercises = [
+      { name: 'Shoulder Press', reps: '12x', icon: '🏋️' },
+      { name: 'Lateral Raises', reps: '12x', icon: '💪' },
+      { name: 'Overhead Tricep Extension', reps: '12x', icon: '🔥' },
+      { name: 'Bicep Curls', reps: '12x', icon: '⚡' },
+      { name: 'Push-ups', reps: '24x', icon: '💀' }
+    ];
+    
+    let currentRound = 1;
+    let completedExercises = new Set();
+    let startTime = Date.now();
+    let timerInterval;
+    
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(() => {}, 1000);
+    }
+    
+    function getElapsed() {
+      const secs = Math.floor((Date.now() - startTime) / 1000);
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+    
+    function renderExercises() {
+      const list = document.getElementById('exerciseList');
+      list.innerHTML = exercises.map((ex, idx) => `
+        <div class="exercise-item ${completedExercises.has(idx) ? 'done' : ''}" onclick="toggleExercise(${idx})">
+          <div class="exercise-check"></div>
+          <div class="exercise-info">
+            <div class="exercise-name">${ex.name}</div>
+            <div class="exercise-reps">${ex.reps}</div>
+          </div>
+          <div class="exercise-icon">${ex.icon}</div>
+        </div>
+      `).join('');
+      
+      updateNextButton();
+    }
+    
+    function toggleExercise(idx) {
+      if (completedExercises.has(idx)) {
+        completedExercises.delete(idx);
+      } else {
+        completedExercises.add(idx);
+        // Fire burst effect
+        spawnBurst();
+      }
+      renderExercises();
+    }
+    
+    function updateNextButton() {
+      const btn = document.getElementById('nextBtn');
+      const allDone = completedExercises.size === exercises.length;
+      btn.disabled = !allDone;
+      
+      if (currentRound === 4 && allDone) {
+        btn.textContent = 'FINISH ⚡';
+        btn.style.borderColor = 'var(--fire-red)';
+        btn.style.color = 'var(--fire-red)';
+      } else {
+        btn.textContent = 'NEXT →';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+    }
+    
+    function updateRoundIndicator() {
+      document.querySelectorAll('.round-dot').forEach(dot => {
+        const round = parseInt(dot.dataset.round);
+        dot.classList.remove('active', 'complete');
+        if (round < currentRound) dot.classList.add('complete');
+        else if (round === currentRound) dot.classList.add('active');
+      });
+    }
+    
+    function nextRound() {
+      if (completedExercises.size !== exercises.length) return;
+      
+      if (currentRound === 4) {
+        document.getElementById('workoutContent').classList.add('hidden');
+        document.getElementById('completeScreen').classList.add('show');
+        document.querySelectorAll('.round-dot').forEach(dot => dot.classList.add('complete'));
+        document.getElementById('timeElapsed').textContent = getElapsed();
+        clearInterval(timerInterval);
+        spawnFireworks();
+        return;
+      }
+      
+      currentRound++;
+      completedExercises.clear();
+      updateRoundIndicator();
+      renderExercises();
+      
+      const msgs = [
+        'KEEP PUSHING 🔥',
+        'NO MERCY 💀',
+        'DESTROY IT ⚡',
+        'PURE AGGRESSION 🔥'
+      ];
+      showToast(msgs[currentRound - 1] || 'LET\'S GO');
+    }
+    
+    function resetRound() {
+      completedExercises.clear();
+      renderExercises();
+    }
+    
+    function resetAll() {
+      currentRound = 1;
+      completedExercises.clear();
+      document.getElementById('workoutContent').classList.remove('hidden');
+      document.getElementById('completeScreen').classList.remove('show');
+      updateRoundIndicator();
+      renderExercises();
+      startTimer();
+    }
+    
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // === PARTICLE SYSTEM ===
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, burst) {
+        this.x = x || Math.random() * canvas.width;
+        this.y = y || canvas.height + 10;
+        this.size = Math.random() * 3 + 1;
+        this.speedY = burst ? (Math.random() - 0.5) * 8 : -(Math.random() * 1.5 + 0.5);
+        this.speedX = burst ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.5;
+        this.life = burst ? 40 : 100 + Math.random() * 100;
+        this.maxLife = this.life;
+        const colors = ['#ff1744', '#ff6d00', '#ffd600', '#d500f9', '#00e5ff'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+        if (!this.burst) this.speedX += (Math.random() - 0.5) * 0.1;
+      }
+
+      draw() {
+        const alpha = this.life / this.maxLife;
+        ctx.globalAlpha = alpha * 0.6;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function spawnBurst() {
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      for (let i = 0; i < 15; i++) {
+        particles.push(new Particle(cx, cy, true));
+      }
+    }
+
+    function spawnFireworks() {
+      for (let burst = 0; burst < 5; burst++) {
+        setTimeout(() => {
+          const cx = Math.random() * canvas.width;
+          const cy = Math.random() * canvas.height * 0.6;
+          for (let i = 0; i < 30; i++) {
+            particles.push(new Particle(cx, cy, true));
+          }
+        }, burst * 400);
+      }
+    }
+
+    // Ambient particles
+    setInterval(() => {
+      if (particles.length < 50) {
+        particles.push(new Particle());
+      }
+    }, 200);
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles = particles.filter(p => p.life > 0);
+      particles.forEach(p => { p.update(); p.draw(); });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+    
+    // Init
+    renderExercises();
+    updateRoundIndicator();
+    startTimer();
+  </script>
+</body>
+</html>
